@@ -1,0 +1,7 @@
+﻿ID,Introdction,Hp,Shield,Damage,Activity,Critical,Agile
+INT,String,INT,INT,INT,INT,INT,INT
+1,第一波,50,50,6,3,3,5
+2,第二波,68,68,9,3,7,7
+3,第三波,98,98,14,3,13,9
+4,第四波,122,122,18,3,19,11
+5,第五波,146,146,22,3,24,13
