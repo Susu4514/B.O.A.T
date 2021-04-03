@@ -113,8 +113,8 @@ public class BattleGrid : MonoBehaviour {
 
 
     //从这里得出坐标
-    public Vector2 GetWorldPositon(int x, int y) {
-        return new Vector2(transform.position.x - xdim / 2.0f + x, transform.position.y + ydim / 2.0f - y);
+    public Vector3 GetWorldPositon(int x, int y) {
+        return new Vector3(transform.position.x - xdim / 2.0f + x, transform.position.y + ydim / 2.0f - y, -0.2f);
     }
 
     public gamePiece SpawnNewPiece(int x, int y, pieceType type) {

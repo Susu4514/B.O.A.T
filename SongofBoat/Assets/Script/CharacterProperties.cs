@@ -4,16 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class CharacterProperties : MonoBehaviour {
+public class CharacterProperties : Character {
     // Start is called before the first frame update
-
-    //人物基础属性，所有生物都有这些属性
-    private int Hp;
-    private int Shield;
-    private int Damage;
-    private int Activity;
-    private int Critical;
-    private int Agile;
 
     private Dictionary<int, CsvDemo> csvDataDic;
     static private string filepath = Application.streamingAssetsPath + "/CharacterConfig.csv";
@@ -25,10 +17,10 @@ public class CharacterProperties : MonoBehaviour {
         public int Hp { get; set; }
         public int Shield { get; set; }
         public int Damage { get; set; }
-        public int Activity { get; set; }
         public int Critical { get; set; }
         public int Agile { get; set; }
     }
+
     void Start()
     {
         //keys是说明字段
@@ -59,9 +51,6 @@ public class CharacterProperties : MonoBehaviour {
                 }
                 else if (keys[j] == "Damage") {
                     csvDemo.Damage = Convert.ToInt32(lineData[j]);
-                }
-                else if (keys[j] == "Activity") {
-                    csvDemo.Activity = Convert.ToInt32(lineData[j]);
                 }
                 else if (keys[j] == "Critical") {
                     csvDemo.Critical = Convert.ToInt32(lineData[j]);
