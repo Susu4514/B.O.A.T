@@ -7,65 +7,68 @@ using UnityEngine;
 public class CharacterProperties : Character {
     // Start is called before the first frame update
 
-    private Dictionary<int, CsvDemo> csvDataDic;
-    static private string filepath = Application.streamingAssetsPath + "/CharacterConfig.csv";
-    string[] fileData = File.ReadAllLines(filepath);
+    private Dictionary<int, BattleInitialSystem> battleInitial;
 
-    public class CsvDemo {
-        public int ID { get; set; }
-        public string Introdction { get; set; }
-        public int Hp { get; set; }
-        public int Shield { get; set; }
-        public int Damage { get; set; }
-        public int Critical { get; set; }
-        public int Agile { get; set; }
+    private int MissionLevel = 1001;
+    static private string BattleInitialfilepath = Application.streamingAssetsPath + "/BattleInitialConfig.csv";
+    public class BattleInitialSystem {
+        public int LevelID { get; set; }
+
+        public int EnemyAmount { get; set; }
+
+        public int EnemyID1 { get; set; }
+       
+        public int EnemyID2 { get; set; }      
+
+        public int EnemyID3 { get; set; }
+
+        public String levelBgd {get;set;}
     }
 
     void Start()
     {
-        //keys是说明字段
-        string[] keys = fileData[0].Split(',');
-
-        csvDataDic = new Dictionary<int, CsvDemo>();
-
-        for (int i = 2; i < fileData.Length; i++) {
+        //先按照行划分
+        string[] BattleLine = File.ReadAllLines(BattleInitialfilepath);
+        //然后把变量行提取出来
+        string[] keys = BattleLine[1].Split(',');
+        //建立字典映射，这里关卡可以没有
+        battleInitial = new Dictionary<int, BattleInitialSystem>();
+        
+        for (int i = 3; i < BattleLine.Length; i++) {
             /* 每一行的内容都是逗号分隔，读取每一列的值 */
-            string[] lineData = fileData[i].Split(',');
 
-            CsvDemo csvDemo = new CsvDemo();
+            string[] lineData = BattleLine[i].Split(',');
 
+            if(Convert.ToInt32(lineData[0]) == MissionLevel){ //如果关卡ID对上了那么继续，如果对不上就不存
+                BattleInitialSystem BattleInitial = new BattleInitialSystem();
             //csv类对应
-            for (int j = 0; j < lineData.Length; j++) {
-                if (keys[j] == "ID") {
-                    csvDemo.ID = Convert.ToInt32(lineData[j]);
+                for (int j = 0; j < lineData.Length; j++) {
+                    if (keys[j] == "LevelID") {
+                        BattleInitial.LevelID = Convert.ToInt32(lineData[j]);
+                    }
+                    else if (keys[j] == "levelBgd") {
+                        BattleInitial.levelBgd = lineData[j];
+                    }
+                    else if (keys[j] == "EnemyAmount") {
+                        //   Debug.Log(lineData[j]);
+                        BattleInitial.EnemyAmount = Convert.ToInt32(lineData[j]);
+                    }
+                    else if (keys[j] == "EnemyID1") {
+                        BattleInitial.EnemyID1 = Convert.ToInt32(lineData[j]);
+                    }
+                    else if (keys[j] == "EnemyID2") {
+                        BattleInitial.EnemyID2 = Convert.ToInt32(lineData[j]);
+                    }
+                    else if (keys[j] == "EnemyID3") {
+                        BattleInitial.EnemyID3 = Convert.ToInt32(lineData[j]);
+                    }
                 }
-                else if (keys[j] == "Introdction") {
-                    csvDemo.Introdction = lineData[j];
+                if (!battleInitial.ContainsKey(BattleInitial.LevelID)){
+                    battleInitial.Add(BattleInitial.LevelID, BattleInitial);
                 }
-                else if (keys[j] == "Hp") {
-                    //   Debug.Log(lineData[j]);
-                    csvDemo.Hp = Convert.ToInt32(lineData[j]);
-                }
-                else if (keys[j] == "Shield") {
-                    csvDemo.Shield = Convert.ToInt32(lineData[j]);
-                }
-                else if (keys[j] == "Damage") {
-                    csvDemo.Damage = Convert.ToInt32(lineData[j]);
-                }
-                else if (keys[j] == "Critical") {
-                    csvDemo.Critical = Convert.ToInt32(lineData[j]);
-                }
-                else if (keys[j] == "Agile") {
-                    csvDemo.Agile = Convert.ToInt32(lineData[j]);
-                }
-            }
-          //  Debug.Log(csvDemo.ID);
-            if (!csvDataDic.ContainsKey(csvDemo.ID)){
-                csvDataDic.Add(csvDemo.ID, csvDemo);
             }
         }
-
-        foreach (KeyValuePair<int,CsvDemo> pair in csvDataDic) {
+        foreach (KeyValuePair<int,BattleInitialSystem> pair in battleInitial) {
            Debug.Log(pair.Key+"  " + pair.Value);
         }
     }

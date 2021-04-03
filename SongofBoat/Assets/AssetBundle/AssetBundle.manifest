@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 1111424986
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: buxi.u3d
+      Dependencies: {}
+    Info_1:
+      Name: hero.u3d
+      Dependencies: {}
+    Info_2:
+      Name: huahua.u3d
+      Dependencies: {}
+    Info_3:
+      Name: baitan.u3d
+      Dependencies: {}
+    Info_4:
+      Name: muli.u3d
+      Dependencies: {}

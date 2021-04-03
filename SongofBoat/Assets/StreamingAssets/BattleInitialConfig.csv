@@ -1,0 +1,4 @@
+﻿关卡ID,说明(程序不读),关卡背景(暂时不读),怪物数量,怪物ID1,怪物ID2,怪物ID3
+LevelID,LevelDescription,LevelBgd,EnemyAmount,EnemyID1,EnemyID2,EnemyID3
+INT,STRING,STRING,INT,INT,INT,INT
+1001,第一个测试关卡,NothingAtAll,3,1001,1002,1003
