@@ -10,18 +10,14 @@ public class LevelSystem : Character {
     private int MissionLevel = 1001;
     static private string BattleInitialfilepath = Application.streamingAssetsPath + "/BattleInitialConfig.csv";
     static private string EnemyModelfilepath = Application.streamingAssetsPath + "/CharModel.csv";
-
+ 
     public GameObject Enemy;
 
     public class BattleInitialSystem {
         public int LevelID { get; set; }
-
         public int EnemyAmount { get; set; }
-
         public int[] EnemyIDs {get; set;}
-
         public String levelBgd {get;set;}
-
         public string[] EnemySprite{get;set;}
         public string[] EnemyTexture{get;set;}
         public List<GameObject> EnemyGroup;
@@ -29,20 +25,24 @@ public class LevelSystem : Character {
 
     private BattleInitialSystem battleInitial; //关卡表的实例变量
 
-    void Start()
-    {
+    void Awake(){
         //先按照行划分
         battleInitial = new BattleInitialSystem();
         battleInitial.EnemyIDs = new int[3];
         battleInitial.EnemySprite = new string[3];
         battleInitial.EnemyTexture = new string[3];
+        battleInitial.EnemyGroup = new List<GameObject>();
         //读了关卡基本表
         readBattleSystem(BattleInitialfilepath);
         //读了关卡怪物纹理
         readEnemyModel(battleInitial.EnemyIDs, battleInitial.EnemyAmount, EnemyModelfilepath);
-
+        //设置位置
         LevelEnemyInitialize();
 
+        
+    }
+    void Start()
+    {
 
     }
 
@@ -116,10 +116,22 @@ public class LevelSystem : Character {
 
     void LevelEnemyInitialize(){
         //已经存储好路径，要新建一个path然后读取assetbundle，然后配一个prefeb
+        //向组内添加纹理
         for(int i = 0 ; i < battleInitial.EnemyAmount ; i++){
-            
+            StartCoroutine(readSpriteFromFile(battleInitial.EnemySprite[i],battleInitial.EnemyTexture[i]));  
         }
-        StartCoroutine(readSpriteFromFile(battleInitial.EnemySprite[0],battleInitial.EnemyTexture[0]));
+        //初始化位置
+        for(int i = 0 ; i <battleInitial.EnemyGroup.Count; i++){
+            battleInitial.EnemyGroup[i].transform.position = GetWorldPositon((i+1)*3.2f);
+
+        }
+
+    }
+
+    public Vector3 GetWorldPositon(float x) {
+        Debug.Log(transform.position.x);
+        Debug.Log(transform.position.y);
+        return new Vector3(transform.position.x - x, transform.position.y / 2.0f + UnityEngine.Random.Range(-0.3f,0.3f), -0.15f);
     }
 
     IEnumerator readSpriteFromFile(string spriteID,string textureID){
@@ -127,8 +139,9 @@ public class LevelSystem : Character {
         AssetBundle spriteasset = AssetBundle.LoadFromFile(path);
         Sprite Enemysprite = spriteasset.LoadAsset<Sprite>(textureID);
         GameObject enemy1 = GameObject.Instantiate(Enemy);
-        Debug.Log(spriteasset);
+        //Debug.Log(spriteasset);
         enemy1.GetComponentInChildren<SpriteRenderer>().sprite = Enemysprite;
+        battleInitial.EnemyGroup.Add(enemy1);
         yield return null ;
     }
 }
