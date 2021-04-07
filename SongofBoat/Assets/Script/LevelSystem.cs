@@ -43,7 +43,7 @@ public class LevelSystem : Character {
     }
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
