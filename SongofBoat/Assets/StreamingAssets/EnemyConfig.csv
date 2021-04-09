@@ -1,0 +1,6 @@
+﻿怪物ID,怪物名称,怪物描述,怪物血量,怪物护盾,怪物攻击,怪物暴击率,怪物闪避,初始行动力,技能1ID,技能1权重填3位数,技能2ID,技能2权重,技能3ID,技能3权重
+EnemyID,EnemyName,EnemyDescription,Hp,Shield,Damage,Critical,Agile,InitialAct,SkillFirst,SkillFirstWeight,SkillSecond,SkillSecondWeight,SkillThird,SkillThirdWeight
+INT,STRING,STRING,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT
+1001,测试小怪1,测试,100,100,10,10,10,2,10001,100,10002,200,10005,500
+1002,测试小怪2,测试,200,200,20,20,20,3,10004,100,10003,300,10006,150
+1003,测试小怪3,测试,300,300,30,30,30,4,10002,100,10004,400,10003,200

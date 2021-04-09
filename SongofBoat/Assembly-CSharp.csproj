@@ -38,14 +38,17 @@
   <ItemGroup>
      <Compile Include="Assets\Script\ClearSystemInit.cs" />
      <Compile Include="Assets\Script\movablepiece.cs" />
+     <Compile Include="Assets\Script\Character.cs" />
      <Compile Include="Assets\Script\HudScript.cs" />
      <Compile Include="Assets\Script\ColorPiece.cs" />
      <Compile Include="Assets\Script\BattleGrid.cs" />
      <Compile Include="Assets\Script\gamePiece.cs" />
+     <Compile Include="Assets\Script\EnemyProperties.cs" />
      <Compile Include="Assets\Script\Clearablepiece.cs" />
      <Compile Include="Assets\Script\CharacterProperties.cs" />
-     <Compile Include="Assets\Script\Character.cs" />
+     <Compile Include="Assets\Script\BuffBase.cs" />
      <Compile Include="Assets\Script\LevelSystem.cs" />
+     <Compile Include="Assets\Script\HealthBar.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.1f1c1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

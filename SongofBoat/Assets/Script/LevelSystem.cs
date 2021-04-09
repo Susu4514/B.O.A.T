@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class LevelSystem : Character {
+public class LevelSystem : MonoBehaviour {
     // Start is called before the first frame update
 
     private int MissionLevel = 1001;
     static private string BattleInitialfilepath = Application.streamingAssetsPath + "/BattleInitialConfig.csv";
     static private string EnemyModelfilepath = Application.streamingAssetsPath + "/CharModel.csv";
+ 
  
     public GameObject Enemy;
 
@@ -20,7 +21,10 @@ public class LevelSystem : Character {
         public String levelBgd {get;set;}
         public string[] EnemySprite{get;set;}
         public string[] EnemyTexture{get;set;}
+
         public List<GameObject> EnemyGroup;
+
+        public EnemyProperties[] Enemyem;
     }
 
     private BattleInitialSystem battleInitial; //关卡表的实例变量
@@ -32,11 +36,12 @@ public class LevelSystem : Character {
         battleInitial.EnemySprite = new string[3];
         battleInitial.EnemyTexture = new string[3];
         battleInitial.EnemyGroup = new List<GameObject>();
+        battleInitial.Enemyem = new EnemyProperties[3];
         //读了关卡基本表
         readBattleSystem(BattleInitialfilepath);
         //读了关卡怪物纹理
         readEnemyModel(battleInitial.EnemyIDs, battleInitial.EnemyAmount, EnemyModelfilepath);
-        //设置位置
+        //设置位置，读取怪物属性
         LevelEnemyInitialize();
 
         
@@ -120,17 +125,20 @@ public class LevelSystem : Character {
         for(int i = 0 ; i < battleInitial.EnemyAmount ; i++){
             StartCoroutine(readSpriteFromFile(battleInitial.EnemySprite[i],battleInitial.EnemyTexture[i]));  
         }
-        //初始化位置
+        //初始化位置 TODO:读取敌人的属性
         for(int i = 0 ; i <battleInitial.EnemyGroup.Count; i++){
             battleInitial.EnemyGroup[i].transform.position = GetWorldPositon((i+1)*3.2f);
-
+            battleInitial.Enemyem[i] = battleInitial.EnemyGroup[i].GetComponent<EnemyProperties>();
+            battleInitial.Enemyem[i].readPropertiesFromFile(battleInitial.EnemyIDs[i]);
+            battleInitial.Enemyem[i].HealthBarInitial();
+            //Debug.Log(battleInitial.Enemyem[i].Hp);
         }
 
     }
 
     public Vector3 GetWorldPositon(float x) {
-        Debug.Log(transform.position.x);
-        Debug.Log(transform.position.y);
+        // Debug.Log(transform.position.x);
+        // Debug.Log(transform.position.y);
         return new Vector3(transform.position.x - x, transform.position.y / 2.0f + UnityEngine.Random.Range(-0.3f,0.3f), -0.15f);
     }
 
@@ -144,4 +152,6 @@ public class LevelSystem : Character {
         battleInitial.EnemyGroup.Add(enemy1);
         yield return null ;
     }
+
+   
 }
