@@ -25,6 +25,8 @@ public class BattleGrid : MonoBehaviour {
 
     public PiecePrefeb[] piecePrefebs;
     public GameObject backGroundPrefeb; //背景，还没用到
+
+    public GameObject Levelsystem;
     private gamePiece[,] pieces; //声明刷新阵列，其实就是一个二维数组
 
     private gamePiece pressedPiece;
@@ -58,6 +60,9 @@ public class BattleGrid : MonoBehaviour {
 
         //填充阵列
         StartCoroutine(Fill());
+
+        Levelsystem = (GameObject)Instantiate(Levelsystem, GetWorldPositon(15, -2), Quaternion.identity);
+        Levelsystem.transform.parent = transform;
     }
 
     // Update is called once per frame
@@ -155,7 +160,11 @@ public class BattleGrid : MonoBehaviour {
                 gamePiece piecePotential = pieces[x, y];
                 if (IsAdjacent(piece, piecePotential) && IsSameColor(piece, piecePotential)) {
                     ChangeColor(piecePotential, 180);
-                    piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.AttackDoubleClear;
+                    if(piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.RED){
+                         piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.AttackDoubleClear;
+                    }
+                    //else if(piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.RED)
+                   
                     //这几个是二消的
                     //Debug.Log(piecePotential.GetComponentInChildren<SpriteRenderer>());
                 }
@@ -207,10 +216,12 @@ public class BattleGrid : MonoBehaviour {
         //以后这里都要改成按照状态判断
         if (enteredPiece.ClearType == (int)gamePiece.ClearTypeEnum.AttackSingleClear) {
             ClearPiece(pressedPiece.X, pressedPiece.Y);
+            Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackSingleClear);
         }
         else if (enteredPiece.ClearType == (int)gamePiece.ClearTypeEnum.AttackDoubleClear) {
             ClearPiece(pressedPiece.X, pressedPiece.Y);
             ClearPiece(enteredPiece.X, enteredPiece.Y);
+            Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackDoubleClear);            
         }
         else if (enteredPiece.ClearType == (int)gamePiece.ClearTypeEnum.AttackTripleClear) {
             gamePiece piece1 = enteredPiece;
@@ -231,7 +242,7 @@ public class BattleGrid : MonoBehaviour {
             ClearPiece(piece2.X, piece2.Y);
         }
         RestorePiece();
-    }
+    } 
     
     //TODO:改变透明度，以后可能改变模型
     public void RestorePiece() {

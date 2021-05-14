@@ -1,81 +1,44 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class CharacterProperties : Character {
-    // Start is called before the first frame update
+    // 人物的属性先写死
+    // 人物的技能属性取决与符文，最初也是写死的
+    public int[] SkillList;
+    //敌人的技能列表和权重
+    //敌人携带的buff列表
+    public HealthBar bar;
+    private BuffBase skill;
+    void Awake(){
+        SkillList = new int[6];
+        for(int i = 0 ; i < SkillList.Length; i ++){
+            SkillList[i] = 10001;
+        }
+        SkillList[1] = 10007;
+        this.Hp = 200;
+        this.HpNow = this.Hp;
+        this.Shield = 0;
+        this.ShieldNow = this.Shield;
+        this.Damage = 20;
+        this.Critical= 20;
+        this.Agile = 20;
 
-    private Dictionary<int, BattleInitialSystem> battleInitial;
-
-    private int MissionLevel = 1001;
-    static private string BattleInitialfilepath = Application.streamingAssetsPath + "/BattleInitialConfig.csv";
-    public class BattleInitialSystem {
-        public int LevelID { get; set; }
-
-        public int EnemyAmount { get; set; }
-
-        public int EnemyID1 { get; set; }
-       
-        public int EnemyID2 { get; set; }      
-
-        public int EnemyID3 { get; set; }
-
-        public String levelBgd {get;set;}
+        skill = GetComponent<BuffBase>();
+        
+        HealthBarInitial();
     }
 
-    void Start()
-    {
-        //先按照行划分
-        string[] BattleLine = File.ReadAllLines(BattleInitialfilepath);
-        //然后把变量行提取出来
-        string[] keys = BattleLine[1].Split(',');
-        //建立字典映射，这里关卡可以没有
-        battleInitial = new Dictionary<int, BattleInitialSystem>();
-        
-        for (int i = 3; i < BattleLine.Length; i++) {
-            /* 每一行的内容都是逗号分隔，读取每一列的值 */
-
-            string[] lineData = BattleLine[i].Split(',');
-
-            if(Convert.ToInt32(lineData[0]) == MissionLevel){ //如果关卡ID对上了那么继续，如果对不上就不存
-                BattleInitialSystem BattleInitial = new BattleInitialSystem();
-            //csv类对应
-                for (int j = 0; j < lineData.Length; j++) {
-                    if (keys[j] == "LevelID") {
-                        BattleInitial.LevelID = Convert.ToInt32(lineData[j]);
-                    }
-                    else if (keys[j] == "levelBgd") {
-                        BattleInitial.levelBgd = lineData[j];
-                    }
-                    else if (keys[j] == "EnemyAmount") {
-                        //   Debug.Log(lineData[j]);
-                        BattleInitial.EnemyAmount = Convert.ToInt32(lineData[j]);
-                    }
-                    else if (keys[j] == "EnemyID1") {
-                        BattleInitial.EnemyID1 = Convert.ToInt32(lineData[j]);
-                    }
-                    else if (keys[j] == "EnemyID2") {
-                        BattleInitial.EnemyID2 = Convert.ToInt32(lineData[j]);
-                    }
-                    else if (keys[j] == "EnemyID3") {
-                        BattleInitial.EnemyID3 = Convert.ToInt32(lineData[j]);
-                    }
-                }
-                if (!battleInitial.ContainsKey(BattleInitial.LevelID)){
-                    battleInitial.Add(BattleInitial.LevelID, BattleInitial);
-                }
-            }
-        }
-        foreach (KeyValuePair<int,BattleInitialSystem> pair in battleInitial) {
-           Debug.Log(pair.Key+"  " + pair.Value);
-        }
+    public void HealthBarInitial(){
+        bar.transform.Find("StartBg").gameObject.SetActive(false);
+        bar.transform.Find("StartText").gameObject.SetActive(false);
+        //TODO:血条的setActive不生效
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void StartSkill(int SkillType){
+        this.skill.cast(SkillList[SkillType-1]);
+        //Debug.Log(SkillList[SkillType-1]);
     }
 }

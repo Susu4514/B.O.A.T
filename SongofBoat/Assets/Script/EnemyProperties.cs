@@ -18,10 +18,14 @@ public class EnemyProperties : Character
 
     public HealthBar bar;
 
+    private LevelSystem levelsystem;
     void Awake(){
         SkillList = new Skill[3];
+        BuffList = new List<Buff>();
     }
- 
+    void Start(){
+        levelsystem = GetComponentInParent<LevelSystem>();
+    }
     //这里读取敌人的各项基本属性
     public void readPropertiesFromFile(int ID){
         string[] BattleLine = File.ReadAllLines(EnemyPropertiespath);
@@ -86,4 +90,16 @@ public class EnemyProperties : Character
         // else{
         //     healthEffect.fillAmount = healthNowimage.fillAmount;
         // }
+
+    private void OnMouseDown() {
+        levelsystem.ChangeSelect(this);
+    }
+
+
+    public void actionDecrease(int x ){
+        if(this.InitialAct<=6){
+            this.InitialAct += x;
+        }
+    }
+
 }

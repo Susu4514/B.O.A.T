@@ -13,6 +13,8 @@ public class LevelSystem : MonoBehaviour {
  
  
     public GameObject Enemy;
+    
+    public GameObject Hero;
 
     public class BattleInitialSystem {
         public int LevelID { get; set; }
@@ -25,18 +27,23 @@ public class LevelSystem : MonoBehaviour {
         public List<GameObject> EnemyGroup;
 
         public EnemyProperties[] Enemyem;
+
+        public  GameObject hero;
     }
 
-    private BattleInitialSystem battleInitial; //关卡表的实例变量
-
+    public BattleInitialSystem battleInitial; //关卡表的实例变量
+    public int PointedEnemy;
     void Awake(){
         //先按照行划分
+        PointedEnemy = 0;
         battleInitial = new BattleInitialSystem();
         battleInitial.EnemyIDs = new int[3];
         battleInitial.EnemySprite = new string[3];
         battleInitial.EnemyTexture = new string[3];
         battleInitial.EnemyGroup = new List<GameObject>();
         battleInitial.Enemyem = new EnemyProperties[3];
+        //battleInitial.hero = new GameObject();
+
         //读了关卡基本表
         readBattleSystem(BattleInitialfilepath);
         //读了关卡怪物纹理
@@ -44,7 +51,9 @@ public class LevelSystem : MonoBehaviour {
         //设置位置，读取怪物属性
         LevelEnemyInitialize();
 
+        ChangeSelect(battleInitial.Enemyem[0]);
         
+        LevelHeroInitialize();
     }
     void Start()
     {
@@ -55,6 +64,11 @@ public class LevelSystem : MonoBehaviour {
     void Update()
     {
         
+    }
+
+    void LevelHeroInitialize(){
+        battleInitial.hero = GameObject.Instantiate(Hero,new Vector3(-5,0,-0.2f),Quaternion.identity);
+        battleInitial.hero.transform.parent = transform;
     }
 
     void readBattleSystem(String path){
@@ -147,11 +161,23 @@ public class LevelSystem : MonoBehaviour {
         AssetBundle spriteasset = AssetBundle.LoadFromFile(path);
         Sprite Enemysprite = spriteasset.LoadAsset<Sprite>(textureID);
         GameObject enemy1 = GameObject.Instantiate(Enemy);
+        enemy1.transform.parent = transform;
         //Debug.Log(spriteasset);
         enemy1.GetComponentInChildren<SpriteRenderer>().sprite = Enemysprite;
         battleInitial.EnemyGroup.Add(enemy1);
         yield return null ;
     }
 
-   
+    public void ChangeSelect(EnemyProperties enemy){
+        for(int i = 0; i < battleInitial.EnemyAmount; i ++){
+            if(battleInitial.Enemyem[i] == enemy){
+                PointedEnemy = i;
+                //Debug.Log("选中了第"+(PointedEnemy+1)+"个敌人");
+                battleInitial.Enemyem[i].transform.Find("Pointed").GetComponent<SpriteRenderer>().enabled = true;
+            }
+            else{
+                battleInitial.Enemyem[i].transform.Find("Pointed").GetComponent<SpriteRenderer>().enabled = false;
+            }
+        }
+    }
 }
