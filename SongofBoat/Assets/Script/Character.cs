@@ -17,50 +17,88 @@ public class Character: MonoBehaviour{
     public int Agile{get;set;}
 
     public struct Buff{
-        public int BuffType;
-        public int BuffDestroyType;
-        public int BuffRefreshType;
-        public int BuffStartIndex;
-        public int BuffNowIndex;
+        public int buffType;
+        public int buffDestroyType;
+        public int buffRefreshType;
+        public int buffStartIndex;
+        public int buffNowIndex;
         public int[] Param;
-        public int BuffIsEffected;
+        public int buffisEffected;
     }
 
-    public List<Buff> BuffList{get;set;}
-    
-    
-    public void shieldDecrease(int x){
-        foreach(Buff buff in BuffList){
-            if(buff.BuffType == 3){ //是3表明是受击类的buff，所以要在算伤害的时候进行判定。
-                Debug.Log(buff.BuffType);
-                Debug.Log(buff.Param[2]);
-            }            
+    protected List<Buff> BuffList;
+
+
+
+
+    public void shieldDecrease(float damage) {
+        if (BuffList.Count != 0) {
+            foreach (Buff buff in BuffList) {
+                if (buff.buffType == 3) { //是3表明是受击类的buff，所以要在算伤害的时候进行判定。
+                    Debug.Log(buff.buffType);
+                    Debug.Log(buff.Param[2]);
+                }
+            }
         }
+        int x = (int)damage;
+
         this.ShieldNow = this.ShieldNow + x > Shield ? Shield : ShieldNow + x;
 
     }
     /* 受到攻击时进行结算的buff
     参数1：buff的发动概率
-    参数2：对目标作用的属性 1、伤害值 2、行动力值 3、其它 如果为3则参数4-6有意义
-    参数3：减免/增加的百分比值
-    参数4：增加/减免的固定值
-    参数4：受击对自身释放的buffid
-    参数5：受击对敌方释放的buffid
-    */
-    public void hpDecrease(int x){
-        foreach(Buff buff in BuffList){
-            if(buff.BuffType == 3){ //是3表明是受击类的buff，所以要在算伤害的时候进行判定。
+    参数2：对目标作用的属性 1、伤害值 2、护盾值 3、行动力值
+    参数3：减免的百分比值
+    参数4：增加的百分比值
+    参数5：增加的固定值
+    参数6：减免的固定值
+    参数7：受击对自身释放的buffid
+    参数8：受击对敌方释放的buffid
 
-            }            
+    */
+    public void hpDecrease(float damage){
+        if (BuffList.Count != 0) {
+            foreach (Buff buff in BuffList) {
+                if (buff.buffType == 3) { //是3表明是受击类的buff，所以要在算伤害的时候进行判定。
+                    if (UnityEngine.Random.Range(0, 100) <= buff.Param[0]) {
+                        switch (buff.Param[1]) {
+                            case 1: //伤害，正常走
+                                damage = damage * (100 + buff.Param[2]) / 100 + buff.Param[3];
+                                break;
+                            case 2:
+
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                }
+            }
         }
+        int x = (int)damage;
         this.HpNow = this.HpNow-x > 0 ? this.HpNow-x : 0;
 //        Debug.Log(this.HpNow);        
         if(this.HpNow<=0){
-            Destroy(gameObject);
+            Destroy(gameObject);  
         }
     }
 
+    public void HpIncrease(float health) {
+        int x = (int)health;
+        this.HpNow = this.HpNow + x > this.Hp ? this.Hp : this.HpNow + x;
+    }
+
+    public void ShieldIncrease(float shield) {
+        int x = (int)shield;
+        this.ShieldNow = this.ShieldNow + x > this.Hp ? this.Hp : this.ShieldNow + x;
+    }
+
     void Awake(){
-       
+        //this.BuffList = new List<Buff>();
+    }
+
+    public void addBuff(Buff buff) {
+        this.BuffList.Add(buff);
     }
 }

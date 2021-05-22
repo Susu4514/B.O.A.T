@@ -153,18 +153,22 @@ public class BattleGrid : MonoBehaviour {
 
     public void SearchClearablePiece(gamePiece piece) {
 
-        piece.ClearType = (int)gamePiece.ClearTypeEnum.AttackSingleClear;
+        if (piece.ColorPieceComponent.Color == ColorPiece.ColorType.RED) {
+            piece.ClearType = (int)gamePiece.ClearTypeEnum.AttackSingleClear;
+        } else if (piece.ColorPieceComponent.Color == ColorPiece.ColorType.BLUE) {
+            piece.ClearType = (int)gamePiece.ClearTypeEnum.DefenseSingleClear;
+        }
 
         for (int x = 0; x < xdim; x++) {
             for (int y = 0; y < ydim; y++) {
                 gamePiece piecePotential = pieces[x, y];
                 if (IsAdjacent(piece, piecePotential) && IsSameColor(piece, piecePotential)) {
                     ChangeColor(piecePotential, 180);
-                    if(piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.RED){
-                         piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.AttackDoubleClear;
-                    }
-                    //else if(piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.RED)
-                   
+                    if (piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.RED) {
+                        piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.AttackDoubleClear;
+                    } else if (piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.BLUE) {
+                        piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.DefenseDoubleClear;
+                    }   
                     //这几个是二消的
                     //Debug.Log(piecePotential.GetComponentInChildren<SpriteRenderer>());
                 }
@@ -179,7 +183,11 @@ public class BattleGrid : MonoBehaviour {
                         gamePiece piece1 = pieces[piece.X + 1, piece.Y];
                         gamePiece piece2 = pieces[piecePotential.X - 1, piecePotential.Y];
                         if (IsSameColor(piece1, piece) && IsSameColor(piece2, piece)) {
-                            piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.AttackTripleClear;
+                            if (piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.RED) {
+                                piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.AttackTripleClear;
+                            } else if (piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.BLUE) {
+                                piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.DefenseTripleClear;
+                            }
                             ChangeColor(piecePotential, 100);
                         }
                     }
@@ -188,7 +196,11 @@ public class BattleGrid : MonoBehaviour {
                         gamePiece piece1 = pieces[piece.X - 1, piece.Y];
                         gamePiece piece2 = pieces[piecePotential.X + 1, piecePotential.Y];
                         if (IsSameColor(piece1, piece) && IsSameColor(piece2, piece)) {
-                            piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.AttackTripleClear;
+                            if (piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.RED) {
+                                piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.AttackTripleClear;
+                            } else if (piecePotential.ColorPieceComponent.Color == ColorPiece.ColorType.BLUE) {
+                                piecePotential.ClearType = (int)gamePiece.ClearTypeEnum.DefenseTripleClear;
+                            }
                             ChangeColor(piecePotential, 100);
                         }
                     }
@@ -214,16 +226,82 @@ public class BattleGrid : MonoBehaviour {
     public void ReleasePiece() {
         // RealeasedPiece = piece;
         //以后这里都要改成按照状态判断
-        if (enteredPiece.ClearType == (int)gamePiece.ClearTypeEnum.AttackSingleClear) {
+        gamePiece piece1 = enteredPiece;
+        gamePiece piece2 = pressedPiece;
+        switch (enteredPiece.ClearType) {
+            case 1:
+                ClearPiece(pressedPiece.X, pressedPiece.Y);
+                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackSingleClear);
+                Debug.Log("1消了进攻球");
+                break;
+            case 2:
+                ClearPiece(pressedPiece.X, pressedPiece.Y);
+                ClearPiece(enteredPiece.X, enteredPiece.Y);
+                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackDoubleClear);
+                Debug.Log("2消了进攻球");
+                break;
+            case 3:
+                if (pressedPiece.X < enteredPiece.X) {
+                    piece1 = pieces[pressedPiece.X + 1, pressedPiece.Y];
+                    piece2 = pieces[enteredPiece.X - 1, enteredPiece.Y];
+                }
+                if (pressedPiece.X > enteredPiece.X) {
+                    piece1 = pieces[pressedPiece.X - 1, pressedPiece.Y];
+                    piece2 = pieces[enteredPiece.X + 1, enteredPiece.Y];
+                }
+                ClearPiece(pressedPiece.X, pressedPiece.Y);
+                ClearPiece(enteredPiece.X, enteredPiece.Y);
+                ClearPiece(piece1.X, piece1.Y);
+                ClearPiece(piece2.X, piece2.Y);
+                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackTripleClear);
+                Debug.Log("4消了进攻球");
+                break;
+            case 4:
+                ClearPiece(pressedPiece.X, pressedPiece.Y);
+                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseSingleClear);
+                Debug.Log("1消了防御球");
+                break;
+            case 5:
+                ClearPiece(pressedPiece.X, pressedPiece.Y);
+                ClearPiece(enteredPiece.X, enteredPiece.Y);
+                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseDoubleClear);
+                Debug.Log("2消了防御球");
+                break;
+            case 6:
+                Debug.Log("4消了防御球");
+                piece1 = enteredPiece;
+                piece2 = pressedPiece;
+
+                if (pressedPiece.X < enteredPiece.X) {
+                    piece1 = pieces[pressedPiece.X + 1, pressedPiece.Y];
+                    piece2 = pieces[enteredPiece.X - 1, enteredPiece.Y];
+                }
+                if (pressedPiece.X > enteredPiece.X) {
+                    piece1 = pieces[pressedPiece.X - 1, pressedPiece.Y];
+                    piece2 = pieces[enteredPiece.X + 1, enteredPiece.Y];
+                }
+
+                ClearPiece(pressedPiece.X, pressedPiece.Y);
+                ClearPiece(enteredPiece.X, enteredPiece.Y);
+                ClearPiece(piece1.X, piece1.Y);
+                ClearPiece(piece2.X, piece2.Y);
+                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseTripleClear);
+
+                break;
+            default:
+                Debug.Log("没有判断出消球");
+                break;
+        }
+        /*if (enteredPiece.ClearType == (int)gamePiece.ClearTypeEnum.AttackSingleClear) {
             ClearPiece(pressedPiece.X, pressedPiece.Y);
             Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackSingleClear);
+            Debug.Log("1消了进攻球");
         }
         else if (enteredPiece.ClearType == (int)gamePiece.ClearTypeEnum.AttackDoubleClear) {
             ClearPiece(pressedPiece.X, pressedPiece.Y);
             ClearPiece(enteredPiece.X, enteredPiece.Y);
-            Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackDoubleClear);            
-        }
-        else if (enteredPiece.ClearType == (int)gamePiece.ClearTypeEnum.AttackTripleClear) {
+            Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackDoubleClear);
+        } else if (enteredPiece.ClearType == (int)gamePiece.ClearTypeEnum.AttackTripleClear) {
             gamePiece piece1 = enteredPiece;
             gamePiece piece2 = pressedPiece;
 
@@ -240,7 +318,7 @@ public class BattleGrid : MonoBehaviour {
             ClearPiece(enteredPiece.X, enteredPiece.Y);
             ClearPiece(piece1.X, piece1.Y);
             ClearPiece(piece2.X, piece2.Y);
-        }
+        }*/
         RestorePiece();
     } 
     

@@ -13,11 +13,15 @@ public class CharacterProperties : Character {
     public HealthBar bar;
     private BuffBase skill;
     void Awake(){
+        BuffList = new List<Buff>();
+
+
         SkillList = new int[6];
         for(int i = 0 ; i < SkillList.Length; i ++){
-            SkillList[i] = 10001;
+            SkillList[i] = 10001+i;
         }
-        SkillList[1] = 10007;
+        //SkillList[1] = 10007;
+
         this.Hp = 200;
         this.HpNow = this.Hp;
         this.Shield = 0;

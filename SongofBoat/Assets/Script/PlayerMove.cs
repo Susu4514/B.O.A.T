@@ -16,13 +16,20 @@ public class PlayerMove : MonoBehaviour
     float speedIndex = 6f;
     Rigidbody m_Rigidbody; 
     AudioSource m_AudioSource;
- 
+
+    private Vector3 leftV3 = new Vector3(30, 30, 0);
+    private Vector3 rightV3 = new Vector3(-30, 210, 0);
+
+    //private float horizontalyet = 1;
+
     // Start is called before the first frame update
     void Start()
     {
-        //m_Animator = GetComponent<Animator>();//获得动画组件
+        m_Animator = GetComponentInChildren<Animator>();//获得动画组件
         m_Rigidbody = GetComponent<Rigidbody>();
         m_AudioSource = GetComponent<AudioSource>();//获得刚体组件
+
+        Debug.Log(m_Animator);
     }
  
  
@@ -30,7 +37,7 @@ public class PlayerMove : MonoBehaviour
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
- 
+
  
         //判断如果没有输入再获取摇杆的值
         horizontal = horizontal == 0 ? variableJoystick.Horizontal : horizontal;
@@ -51,9 +58,23 @@ public class PlayerMove : MonoBehaviour
  
         //根据水平和垂直数值，如果有一个移动就代表着行走
         bool isWalking = hasHorizontalInput || hasVerticalINput;
- 
- 
-        // m_Animator.SetBool("IsWalking", isWalking);
+
+        bool isMirror = (horizontal >= 0 && vertical != 0) ? true : false;
+
+        //Debug.Log(isWalking);
+        if(isWalking){
+            m_Animator.SetInteger("AnimState", 1);
+            if (isMirror){
+                transform.Find("Sprite").transform.rotation = Quaternion.Euler(rightV3);
+                
+            }
+            else{
+                transform.Find("Sprite").transform.rotation = Quaternion.Euler(leftV3);
+            }
+        }
+        else{
+            m_Animator.SetInteger("AnimState",0);
+        }
         // if (isWalking)
         // {
         //     if (!m_AudioSource.isPlaying)
