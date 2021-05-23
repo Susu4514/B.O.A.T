@@ -73,7 +73,7 @@ public class BuffBase:MonoBehaviour
                     break;  
             }
         }
-        Debug.Log(buffID);
+        //Debug.Log(buffID);
     }
 
     //从csv文件中读取buff的数据
@@ -147,16 +147,16 @@ public class BuffBase:MonoBehaviour
         if (UnityEngine.Random.Range(0, 100) <= buffParam[0]) {
             //根据参数值计算伤害             //计数决定是第几个被选中的敌人
             int Pointed = levelsystem.PointedEnemy;
-            float Damage = character.Damage * buffParam[2] / 100 + character.HpNow * buffParam[3] / 100 + character.ShieldNow * buffParam[4] / 100 + buffParam[5] * levelsystem.battleInitial.Enemyem[Pointed].InitialAct + buffParam[6];
+            float Damage = character.Damage * buffParam[2] / 100 + character.HpNow * buffParam[3] / 100 + character.ShieldNow * buffParam[4] / 100 + buffParam[5] * levelsystem.enemyList[Pointed].properties.InitialAct + buffParam[6];
             //buff对自己生效
             if (buffTarget == 1) {
                 switch (buffParam[1]) {
                     //BuffIndex2是判断对目标的什么属性生效
                     case (int)DirectBuffType.Hp:
-                        levelsystem.battleInitial.hero.GetComponent<CharacterProperties>().hpDecrease(Damage * -1);
+                        levelsystem.Hero.GetComponent<CharacterProperties>().hpDecrease(Damage * -1);
                         break;
                     case (int)DirectBuffType.Shield:
-                        levelsystem.battleInitial.hero.GetComponent<CharacterProperties>().shieldDecrease(Damage * -1);
+                        levelsystem.Hero.GetComponent<CharacterProperties>().shieldDecrease(Damage * -1);
                         break;
                     default:
                         break;
@@ -167,13 +167,13 @@ public class BuffBase:MonoBehaviour
                     switch (buffParam[1]) {
                         //BuffIndex2是判断对目标的什么属性生效
                         case (int)DirectBuffType.Hp:
-                            levelsystem.battleInitial.Enemyem[Pointed].hpDecrease(Damage);
+                            levelsystem.enemyList[Pointed].properties.hpDecrease(Damage);
                             break;
                         case (int)DirectBuffType.Shield:
-                            levelsystem.battleInitial.Enemyem[Pointed].shieldDecrease(Damage);
+                            levelsystem.enemyList[Pointed].properties.shieldDecrease(Damage);
                             break;
                         case (int)DirectBuffType.Action:
-                            levelsystem.battleInitial.Enemyem[Pointed].actionDecrease((int)Damage);
+                            levelsystem.enemyList[Pointed].properties.actionDecrease((int)Damage);
                             break;
                         default:
                             break;
@@ -181,20 +181,20 @@ public class BuffBase:MonoBehaviour
                 } else if (buffAoe == 1) {
                     switch (buffParam[1]) { //BuffIndex2是判断对目标的什么属性生效
                         case (int)DirectBuffType.Hp:
-                            for (int i = 0; i < levelsystem.battleInitial.Enemyem.Length; i++) {
-                                levelsystem.battleInitial.Enemyem[i].hpDecrease(Damage);
+                            for (int i = 0; i < levelsystem.enemyList.Count; i++) {
+                                levelsystem.enemyList[i].properties.hpDecrease(Damage);
                             }
                             break;
                             //这个地方以后一定会出错。。敌人死了之后会报错
                         case (int)DirectBuffType.Shield:
-                            for (int i = 0; i < levelsystem.battleInitial.Enemyem.Length; i++) {
-                                levelsystem.battleInitial.Enemyem[i].shieldDecrease(Damage);
+                            for (int i = 0; i < levelsystem.enemyList.Count; i++) {
+                                levelsystem.enemyList[i].properties.shieldDecrease(Damage);
                             }
                             break;
 
                         case (int)DirectBuffType.Action:
-                            for (int i = 0; i < levelsystem.battleInitial.Enemyem.Length; i++) {
-                                levelsystem.battleInitial.Enemyem[i].actionDecrease((int)Damage);
+                            for (int i = 0; i < levelsystem.enemyList.Count; i++) {
+                                levelsystem.enemyList[i].properties.actionDecrease((int)Damage);
                             }
                             break;
 
@@ -242,11 +242,11 @@ public class BuffBase:MonoBehaviour
         int Pointed = levelsystem.PointedEnemy;
         if (UnityEngine.Random.Range(0, 100) <= buffParam[0]) {
             if (buffAoe == 1) {
-                for (int i = 0; i < levelsystem.battleInitial.Enemyem.Length; i++) {
-                    levelsystem.battleInitial.Enemyem[i].addBuff(newbuff);
+                for (int i = 0; i < levelsystem.enemyList.Count; i++) {
+                    levelsystem.enemyList[Pointed].properties.addBuff(newbuff);
                 }
             } else if (buffAoe == 0) {
-                levelsystem.battleInitial.Enemyem[Pointed].addBuff(newbuff);
+                levelsystem.enemyList[Pointed].properties.addBuff(newbuff);
             }
         }
     }
@@ -278,12 +278,12 @@ public class BuffBase:MonoBehaviour
         int Pointed = levelsystem.PointedEnemy;
         if(UnityEngine.Random.Range(0, 100) <= buffParam[0]){
             if( buffAoe == 1 ){
-                for(int i = 0 ; i < levelsystem.battleInitial.Enemyem.Length; i++){
-                    levelsystem.battleInitial.Enemyem[i].addBuff(newbuff);
+                for(int i = 0 ; i < levelsystem.enemyList.Count; i++){
+                    levelsystem.enemyList[Pointed].properties.addBuff(newbuff);
                 }
             }
             else if( buffAoe == 0 ){
-                levelsystem.battleInitial.Enemyem[Pointed].addBuff(newbuff);
+                levelsystem.enemyList[Pointed].properties.addBuff(newbuff);
             }
         }
     }

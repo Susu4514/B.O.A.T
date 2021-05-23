@@ -61,7 +61,7 @@ public class BattleGrid : MonoBehaviour {
         //填充阵列
         StartCoroutine(Fill());
 
-        Levelsystem = (GameObject)Instantiate(Levelsystem, GetWorldPositon(15, -2), Quaternion.identity);
+        Levelsystem = (GameObject)Instantiate(Levelsystem, GetWorldPositon(13, -2), Quaternion.identity);
         Levelsystem.transform.parent = transform;
     }
 
@@ -75,9 +75,16 @@ public class BattleGrid : MonoBehaviour {
         while (FillStep()) {
             yield return new WaitForSeconds(filltime);
         }
-    }
 
-    //单步填充计算
+        for (int x = 0; x < xdim; x++) {
+            for (int y = 0; y < ydim; y++) {
+                pieces[x, y].gameObject.GetComponent<BoxCollider2D>().enabled = true;
+            }
+            pieces[6, 0].gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            pieces[6, 1].gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        }
+    }
+            //单步填充计算
     public bool FillStep() {
         bool movedPiece = false;
 
@@ -102,12 +109,12 @@ public class BattleGrid : MonoBehaviour {
 
             if (pieceBelow.getType() == pieceType.EMPTY) {
                 Destroy(pieceBelow.gameObject);
-                GameObject newPiece = (GameObject)Instantiate(piecePrefabDict[pieceType.NORMAL], GetWorldPositon(xdim, y), Quaternion.identity);
+                GameObject newPiece = (GameObject)Instantiate(piecePrefabDict[pieceType.NORMAL], GetWorldPositon(xdim-0.84f, y), Quaternion.identity);
                 newPiece.transform.parent = transform;
 
                 pieces[xdim - 1, y] = newPiece.GetComponent<gamePiece>();
                 pieces[xdim - 1, y].Init(xdim - 1, y, this, pieceType.NORMAL);
-                pieces[xdim - 1, y].MovableComponent.Move(xdim, y, filltime);
+                pieces[xdim - 1, y].MovableComponent.Move(xdim-0.84f, y, filltime);
                 pieces[xdim - 1, y].ColorPieceComponent.SetColor((ColorPiece.ColorType)Random.Range(0, pieces[xdim - 1, y].ColorPieceComponent.NumColors));
                 movedPiece = true;
 
@@ -118,8 +125,8 @@ public class BattleGrid : MonoBehaviour {
 
 
     //从这里得出坐标
-    public Vector3 GetWorldPositon(int x, int y) {
-        return new Vector3(transform.position.x - xdim / 2.0f + x, transform.position.y + ydim / 2.0f - y, -0.2f);
+    public Vector3 GetWorldPositon(float x, float y) {
+        return new Vector3(transform.position.x - xdim / 2.0f + x*1.22f - 0.2f, transform.position.y + ydim / 2.0f - 1.25f*y +0.2f, -0.2f);
     }
 
     public gamePiece SpawnNewPiece(int x, int y, pieceType type) {
@@ -159,7 +166,7 @@ public class BattleGrid : MonoBehaviour {
             piece.ClearType = (int)gamePiece.ClearTypeEnum.DefenseSingleClear;
         }
 
-        for (int x = 0; x < xdim; x++) {
+        for (int x = 0; x < xdim-1; x++) {
             for (int y = 0; y < ydim; y++) {
                 gamePiece piecePotential = pieces[x, y];
                 if (IsAdjacent(piece, piecePotential) && IsSameColor(piece, piecePotential)) {
@@ -174,7 +181,7 @@ public class BattleGrid : MonoBehaviour {
                 }
             }
         }
-        for (int x = 0; x < xdim; x++) {
+        for (int x = 0; x < xdim-1; x++) {
             for (int y = 0; y < ydim; y++) {
                 gamePiece piecePotential = pieces[x, y];
                 if ((int)Mathf.Abs(piece.X - piecePotential.X) == 1 && (int)Mathf.Abs(piece.Y - piecePotential.Y) == 1 && IsSameColor(piece, piecePotential)) {
@@ -231,13 +238,13 @@ public class BattleGrid : MonoBehaviour {
         switch (enteredPiece.ClearType) {
             case 1:
                 ClearPiece(pressedPiece.X, pressedPiece.Y);
-                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackSingleClear);
+                Levelsystem.GetComponent<LevelSystem>().Hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackSingleClear);
                 Debug.Log("1消了进攻球");
                 break;
             case 2:
                 ClearPiece(pressedPiece.X, pressedPiece.Y);
                 ClearPiece(enteredPiece.X, enteredPiece.Y);
-                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackDoubleClear);
+                Levelsystem.GetComponent<LevelSystem>().Hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackDoubleClear);
                 Debug.Log("2消了进攻球");
                 break;
             case 3:
@@ -253,18 +260,18 @@ public class BattleGrid : MonoBehaviour {
                 ClearPiece(enteredPiece.X, enteredPiece.Y);
                 ClearPiece(piece1.X, piece1.Y);
                 ClearPiece(piece2.X, piece2.Y);
-                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackTripleClear);
+                Levelsystem.GetComponent<LevelSystem>().Hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.AttackTripleClear);
                 Debug.Log("4消了进攻球");
                 break;
             case 4:
                 ClearPiece(pressedPiece.X, pressedPiece.Y);
-                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseSingleClear);
+                Levelsystem.GetComponent<LevelSystem>().Hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseSingleClear);
                 Debug.Log("1消了防御球");
                 break;
             case 5:
                 ClearPiece(pressedPiece.X, pressedPiece.Y);
                 ClearPiece(enteredPiece.X, enteredPiece.Y);
-                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseDoubleClear);
+                Levelsystem.GetComponent<LevelSystem>().Hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseDoubleClear);
                 Debug.Log("2消了防御球");
                 break;
             case 6:
@@ -285,7 +292,7 @@ public class BattleGrid : MonoBehaviour {
                 ClearPiece(enteredPiece.X, enteredPiece.Y);
                 ClearPiece(piece1.X, piece1.Y);
                 ClearPiece(piece2.X, piece2.Y);
-                Levelsystem.GetComponent<LevelSystem>().battleInitial.hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseTripleClear);
+                Levelsystem.GetComponent<LevelSystem>().Hero.GetComponent<CharacterProperties>().StartSkill((int)gamePiece.ClearTypeEnum.DefenseTripleClear);
 
                 break;
             default:
@@ -329,11 +336,13 @@ public class BattleGrid : MonoBehaviour {
                 gamePiece piece = pieces[x, y];
                 piece.GetComponentInChildren<SpriteRenderer>().material.color = new Color32(255, 255, 255, 255);
                 piece.ClearType = (int)gamePiece.ClearTypeEnum.NONE;
+                piece.transform.Find("magicRing").gameObject.SetActive(false);
             }
         }
     }
 
     public void ChangeColor(gamePiece piece, float newAlpha) {
-        piece.GetComponentInChildren<SpriteRenderer>().material.color = new Color(1, 1, 1, newAlpha/255);
+        piece.transform.Find("magicRing").gameObject.SetActive(true);
+        //piece.GetComponentInChildren<SpriteRenderer>().material.color = new Color(1, 1, 1, newAlpha/255);
     }
 }

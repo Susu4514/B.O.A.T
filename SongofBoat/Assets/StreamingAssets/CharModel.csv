@@ -1,6 +1,6 @@
 ﻿怪物ID,怪物名称,怪物描述,怪物纹理,图片路径,怪物动作
 EnemyID,EnemyName,EnemyDescription,EnemySprite,EnemyTexture,EnemyAct
 INT,STRING,STRING,STRING,STRING,STRING
-1001,测试小怪1,测试,buxi.u3d,Buxi.PNG,qq
-1002,测试小怪2,测试,huahua.u3d,Huahua.PNG,ww
-1003,测试小怪3,测试,baitan.u3d,Man_baitan.PNG,ee
+1001,测试小怪1,测试,enemy1.u3d,enemy1.PNG,qq
+1002,测试小怪2,测试,enemy2.u3d,enemy2.PNG,ww
+1003,测试小怪3,测试,enemy3.u3d,enemy3.PNG,ee

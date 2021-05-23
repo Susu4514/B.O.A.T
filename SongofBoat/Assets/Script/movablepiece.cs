@@ -25,7 +25,7 @@ public class movablepiece : MonoBehaviour
         
     }
 
-    public void Move(int newx , int newy, float time) {
+    public void Move(float newx , float newy, float time) {
         /*piece.X = newx;
         piece.Y = newy;
         piece.transform.localPosition = piece.GridRef.GetWorldPositon(newx, newy);*/
@@ -36,9 +36,9 @@ public class movablepiece : MonoBehaviour
         StartCoroutine(moveCoroutine);
     }
 
-    private IEnumerator MoveCoroutine(int newx,int newy, float time) {
-        piece.X = newx;
-        piece.Y = newy;
+    private IEnumerator MoveCoroutine(float newx, float newy, float time) {
+        piece.X = (int)newx;
+        piece.Y = (int)newy;
 
         Vector3 startPos = transform.position;
         Vector3 endPos = piece.GridRef.GetWorldPositon(newx, newy);

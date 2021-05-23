@@ -18,7 +18,7 @@ public class EnemyProperties : Character
 
     public HealthBar bar;
 
-    private LevelSystem levelsystem;
+    //private LevelSystem levelsystem;
 
 
     void Awake(){
@@ -27,7 +27,6 @@ public class EnemyProperties : Character
     }
     void Start(){
         base.Start();
-        levelsystem = GetComponentInParent<LevelSystem>();
     }
     //这里读取敌人的各项基本属性
     public void readPropertiesFromFile(int ID){

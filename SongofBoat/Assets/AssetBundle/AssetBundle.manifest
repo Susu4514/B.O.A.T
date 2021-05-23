@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2444502203
+CRC: 2507498967
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -16,4 +16,13 @@ AssetBundleManifest:
       Dependencies: {}
     Info_4:
       Name: buxi.u3d
+      Dependencies: {}
+    Info_5:
+      Name: enemy2.u3d
+      Dependencies: {}
+    Info_6:
+      Name: enemy3.u3d
+      Dependencies: {}
+    Info_7:
+      Name: enemy1.u3d
       Dependencies: {}

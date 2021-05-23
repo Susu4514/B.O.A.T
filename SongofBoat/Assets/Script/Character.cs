@@ -28,6 +28,9 @@ public class Character: MonoBehaviour{
     private Vector3 startPos;
     private Vector3 endPos;
 
+    protected LevelSystem levelsystem;
+
+
     public struct Buff{
         public int buffType;
         public int buffDestroyType;
@@ -90,10 +93,8 @@ public class Character: MonoBehaviour{
         }
         int x = (int)damage;
         this.HpNow = this.HpNow-x > 0 ? this.HpNow-x : 0;
-//        Debug.Log(this.HpNow);        
-        if(this.HpNow<=0){
-            Destroy(gameObject);  
-        }
+        //        Debug.Log(this.HpNow);       
+
 
         GameObject fp = Instantiate(FloatPoint, transform.position, Quaternion.identity) as GameObject;
         fp.transform.GetChild(0).GetComponent<TextMesh>().text = damage.ToString();
@@ -101,6 +102,12 @@ public class Character: MonoBehaviour{
         FlashColor(flashTime);
 
         CharacterHitted();
+
+        if (this.HpNow<=0){
+            Destroy(gameObject);
+           // levelsystem.battleInitial.EnemyGroup.RemoveAt(levelsystem.PointedEnemy);
+        }
+
 
     }
 
@@ -120,6 +127,8 @@ public class Character: MonoBehaviour{
 
     public void Start() {
         spRender = GetComponentInChildren<SpriteRenderer>();
+        levelsystem = GetComponentInParent<LevelSystem>();
+
         originalColor = spRender.color;
     }
 
@@ -140,7 +149,7 @@ public class Character: MonoBehaviour{
     public void CharacterHitted() {
         startPos = transform.position;
         endPos = startPos + new Vector3(0.4f, 0, 0);
-        Debug.Log(endPos);
+        //Debug.Log(endPos);
         InvokeRepeating("CharacterMove", 0, clashTime);
     }
 
@@ -149,7 +158,7 @@ public class Character: MonoBehaviour{
         if (transform.position == endPos) {
             InvokeRepeating("CharacterIdle", 0, clashTime);
             CancelInvoke("CharacterMove");
-            Debug.Log("停止后退");
+            //Debug.Log("停止后退");
         }
 
     }
