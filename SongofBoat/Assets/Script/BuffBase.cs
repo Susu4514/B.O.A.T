@@ -212,10 +212,10 @@ public class BuffBase:MonoBehaviour
     */
     public void castGiving(){
         //这里是因为进到下面的函数里，变量的值会变，所以存在栈里
-        int[] buffParams = new int[6];
+        int[] buffParams = new int[8];
 
         if(UnityEngine.Random.Range(0, 100)<=this.buffParam[0]){
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 8; i++) {
                 buffParams[i] = this.buffParam[i+1];
                 this.cast(buffParams[i]);
             }
@@ -229,16 +229,14 @@ public class BuffBase:MonoBehaviour
 
     public void castStart(){
         Character.Buff newbuff = new Character.Buff();
-        newbuff.buffType = 3;
+        newbuff.buffType = 4;
         newbuff.buffDestroyType = buffDestroytype;
         newbuff.buffRefreshType = buffRestartindex;
         newbuff.buffStartIndex = buffStartIndex;
         newbuff.buffNowIndex = buffStartIndex;
-        newbuff.Param[0] = buffParam[2];
-        newbuff.Param[1] = buffParam[3];
-        newbuff.Param[2] = buffParam[4];
-        newbuff.Param[3] = buffParam[5];
-        newbuff.Param[4] = buffParam[6];
+        for (int i = 0; i < 8; i++) {
+            newbuff.Param[i] = buffParam[i + 1];
+        }
 
 
         int Pointed = levelsystem.PointedEnemy;
@@ -255,30 +253,28 @@ public class BuffBase:MonoBehaviour
 
     /* 受到攻击时进行结算的buff
     参数1：buff的发动概率
-    参数2：对目标作用的属性 1、伤害值 2、行动力值 3、其它 如果为3则参数4-6有意义
-    参数3：减免/增加的百分比值
-    参数4：增加/减免的固定值
-    参数5：受击对自身释放的buffid
-    参数6：受击对敌方释放的buffid
-    参数7：是否绑定其它buffid进行生效
+    参数2：对目标作用的属性 1、伤害值 2、护盾值 3、行动力值
+    参数3：减免的百分比值
+    参数4：增加的百分比值
+    参数5：增加的固定值
+    参数6：减免的固定值
+    参数7：受击对自身释放的buffid
+    参数8：受击对敌方释放的buffid
+    参数9: 绑定buff的ID
     */
+
     public void castCalculate(){
         Character.Buff newbuff = new Character.Buff();
-        newbuff.Param = new int[6];
+        newbuff.Param = new int[8];
         newbuff.buffType = 3;
         newbuff.buffDestroyType = buffDestroytype;
         newbuff.buffRefreshType = buffRestartindex;
         newbuff.buffStartIndex = buffStartIndex;
         newbuff.buffNowIndex = buffStartIndex;
-        newbuff.Param[0] = buffParam[1];
-        newbuff.Param[1] = buffParam[2];
-        newbuff.Param[2] = buffParam[3];
-        newbuff.Param[3] = buffParam[4];
-        newbuff.Param[4] = buffParam[5];
-        newbuff.Param[5] = buffParam[6];
-
+        for (int i = 0; i < 8; i++) {
+            newbuff.Param[i] = buffParam[i + 1];
+        }
         //Debug.Log(newbuff);
-
         int Pointed = levelsystem.PointedEnemy;
         if(UnityEngine.Random.Range(0, 100) <= buffParam[0]){
             if( buffAoe == 1 ){

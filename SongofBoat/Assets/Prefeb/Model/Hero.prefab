@@ -85,6 +85,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f02993b1d2d7e5642815c0b19f093a72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FloatPoint: {fileID: 1223575463011947404, guid: 740aae2def110374fa0fd1a63ad7e5f4,
+    type: 3}
   SkillList: 
   bar: {fileID: 8271078084365587786, guid: 89ba934600069ac45b91e299942514fe, type: 3}
 --- !u!1 &7411391427174246936

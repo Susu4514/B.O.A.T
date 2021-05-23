@@ -67,7 +67,7 @@ public class LevelSystem : MonoBehaviour {
     }
 
     void LevelHeroInitialize(){
-        battleInitial.hero = GameObject.Instantiate(Hero,new Vector3(-5,0,-0.2f),Quaternion.identity);
+        battleInitial.hero = GameObject.Instantiate(Hero,new Vector3(-5,1.3f,-0.2f),Quaternion.identity);
         battleInitial.hero.transform.parent = transform;
     }
 
@@ -147,13 +147,24 @@ public class LevelSystem : MonoBehaviour {
             battleInitial.Enemyem[i].HealthBarInitial();
             //Debug.Log(battleInitial.Enemyem[i].Hp);
         }
-
+        switch (battleInitial.EnemyGroup.Count) {
+            case (1):
+                break;
+            case (2):
+                break;
+            case (3):
+                battleInitial.Enemyem[1].transform.position += new Vector3(0.3f, 1.3f, 0);
+                battleInitial.Enemyem[0].transform.position += new Vector3(0, -0.2f, 0);
+                break;
+            default:
+                break;
+        }
     }
 
     public Vector3 GetWorldPositon(float x) {
         // Debug.Log(transform.position.x);
         // Debug.Log(transform.position.y);
-        return new Vector3(transform.position.x - x, transform.position.y / 2.0f + UnityEngine.Random.Range(-0.3f,0.3f), -0.15f);
+        return new Vector3(transform.position.x - x, 1.3f, -0.15f);
     }
 
     IEnumerator readSpriteFromFile(string spriteID,string textureID){

@@ -156,6 +156,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44c53a49696b2842bd6b60c66605d10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FloatPoint: {fileID: 1223575463011947404, guid: 740aae2def110374fa0fd1a63ad7e5f4,
+    type: 3}
+  flashTime: 0.13
+  clashTime: 0.01
+  backSpeed: 0.02
+  clashSpeed: 0.05
   InitialAct: 0
   bar: {fileID: 968820829897655187}
 --- !u!114 &4214541932454580604

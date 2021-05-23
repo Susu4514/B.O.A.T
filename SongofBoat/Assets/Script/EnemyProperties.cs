@@ -19,11 +19,14 @@ public class EnemyProperties : Character
     public HealthBar bar;
 
     private LevelSystem levelsystem;
+
+
     void Awake(){
         SkillList = new Skill[3];
         BuffList = new List<Buff>();
     }
     void Start(){
+        base.Start();
         levelsystem = GetComponentInParent<LevelSystem>();
     }
     //这里读取敌人的各项基本属性
@@ -101,5 +104,6 @@ public class EnemyProperties : Character
             this.InitialAct += x;
         }
     }
+
 
 }

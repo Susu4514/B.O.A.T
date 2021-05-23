@@ -35,6 +35,9 @@ public class CharacterProperties : Character {
         HealthBarInitial();
     }
 
+    private void Start() {
+        base.Start();
+    }
     public void HealthBarInitial(){
         bar.transform.Find("StartBg").gameObject.SetActive(false);
         bar.transform.Find("StartText").gameObject.SetActive(false);
